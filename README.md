@@ -1,6 +1,7 @@
-# Assignment: Vue.js – Simple To-Do List
+# Assignment: Vue.js – Aplikasi Manajemen Tugas
 
 ## Identitas
+
 - **Nama**: Abdul Wafa
 - **NIM**: F1D022104
 - **Mata Kuliah**: Pemrograman Web Lanjut B
@@ -8,206 +9,345 @@
 
 ---
 
-## 📋 Deskripsi Tugas
-Pada tugas ini saya membuat aplikasi **To-Do List** sederhana menggunakan **Vue.js**.  
+## Deskripsi Tugas
+
+Pada tugas ini saya membuat **Aplikasi Manajemen Tugas** yang lebih kompleks menggunakan **Vue 3**, **TypeScript**, **Pinia**, dan **Tailwind CSS**.
 
 ### Fitur Aplikasi:
-✅ **Menambah tugas** - Input tugas baru melalui form  
-✅ **Menghapus tugas** - Hapus tugas yang sudah selesai  
-✅ **Menampilkan pesan kosong** - Notifikasi ketika belum ada tugas  
-✅ **Reaktivitas dengan `ref()`** - State management menggunakan Composition API  
-✅ **Tampilan modern & responsif** - UI yang menarik dengan gradient dan animasi  
+
+1. **Navbar dengan 2 Tab**
+
+   - Tab "List Tugas" untuk tugas aktif
+   - Tab "Tugas Selesai" untuk tugas yang sudah diselesaikan
+
+2. **Manajemen Tugas**
+
+   - Menambah tugas dengan form lengkap (judul, detail opsional, deadline)
+   - Menandai tugas sebagai selesai dengan tombol "Done"
+   - Menghapus tugas dengan konfirmasi
+   - Tanggal dibuat otomatis di-generate saat tugas ditambahkan
+
+3. **Evaluasi Deadline**
+
+   - Tugas yang selesai **sebelum/tepat deadline** → Background **hijau**
+   - Tugas yang selesai **melewati deadline** → Background **merah**
+   - Badge status untuk memberikan feedback visual
+
+4. **State Management**
+
+   - Menggunakan **Pinia** untuk state management terpusat
+   - Data terstruktur dengan **TypeScript interface**
+   - Reaktifitas otomatis untuk update UI
+
+5. **Modern UI/UX**
+   - Fullscreen layout dengan background gradient ungu
+   - Styling dengan **Tailwind CSS**
+   - Responsive design
+   - Smooth transitions dan hover effects
 
 ---
 
-## 🚀 Cara Menjalankan Aplikasi
+## Teknologi yang Digunakan
 
-### 1. Clone Repository
-```bash
-git clone <repository-url>
-cd todoVue_F1D022104
-```
-
-### 2. Install Dependencies
-```bash
-npm install
-```
-
-### 3. Jalankan Development Server
-```bash
-npm run dev
-```
-
-### 4. Build untuk Production
-```bash
-npm run build
-```
+- **Vue 3** dengan Composition API
+- **TypeScript** untuk type safety
+- **Pinia** untuk state management
+- **Tailwind CSS** untuk styling
+- **Vite** sebagai build tool
 
 ---
 
-## 🎯 Hasil
+## Hasil
 
 ### 1. Screenshot Hasil Program
 
-#### a. Tampilan Awal (Kosong)
-![Tampilan Awal](./screenshots/tampilan-kosong.png)
-*Tampilan ketika belum ada tugas. Menampilkan pesan "Tidak ada tugas"*
+#### Tampilan List Tugas (Kosong)
 
-#### b. Form Input Tugas
-![Form Input](./screenshots/form-input.png)
-*Form input dengan placeholder dan tombol "Tambah Tugas"*
+![List Kosong](./screenshots/ListTugas.png)
+_Tampilan awal ketika belum ada tugas. Menampilkan pesan "Tidak ada tugas. Klik 'Tambah Tugas' untuk membuat tugas baru."_
 
-#### c. Daftar Tugas
-![Daftar Tugas](./screenshots/daftar-tugas.png)
-*Daftar tugas yang telah ditambahkan dengan tombol hapus*
+#### Form Tambah Tugas
 
-#### d. Interaksi Hover
-![Hover Effect](./screenshots/hover-effect.png)
-*Efek hover pada item tugas dan tombol*
+![Form Tambah](./screenshots/TambahTugas.png)
+_Form input dengan field:_
+
+- _Tugas (required): Judul tugas_
+- _Detail (optional): Deskripsi tugas_
+- _Tanggal Deadline (required): Batas waktu penyelesaian_
+
+#### List Tugas Aktif
+
+![List Aktif](./screenshots/BerhasilMenambah.png)
+_Menampilkan tugas yang masih aktif dengan informasi:_
+
+- _Judul dan detail tugas_
+- _Tanggal dibuat dan deadline_
+- _Tombol "Done" untuk menyelesaikan_
+- _Tombol "Hapus" untuk menghapus tugas_
+
+#### Tugas Selesai (Tepat Waktu & Terlambat)
+
+![Tugas Selesai](./screenshots/HasilTekanDone.png)
+_Menampilkan tugas yang sudah diselesaikan dengan color coding:_
+
+- _Background hijau + badge "✓ Selesai Tepat Waktu" untuk tugas yang diselesaikan sebelum/pada deadline_
+- _Background merah + badge "⚠ Selesai Terlambat" untuk tugas yang diselesaikan melewati deadline_
 
 ---
 
 ### 2. Penjelasan Singkat
 
-#### 📝 **Bagaimana `addTask()` Bekerja**
-```javascript
-const addTask = () => {
-  if (newTask.value.trim() !== '') {
-    tasks.value.push(newTask.value.trim())
-    newTask.value = '' // Reset input setelah ditambahkan
-  }
+#### A. State Management dengan Pinia (`stores/todo.ts`)
+
+**Interface Todo:**
+
+```typescript
+export interface Todo {
+	id: number; // ID unik untuk setiap tugas
+	title: string; // Judul tugas (required)
+	detail: string; // Detail tugas (optional)
+	deadline: string; // Tanggal deadline
+	createdAt: string; // Tanggal dibuat (auto-generated)
+	completed: boolean; // Status selesai
+	completedAt?: string; // Tanggal selesai (optional)
 }
 ```
-- Fungsi `addTask()` dipanggil ketika form di-submit dengan `@submit.prevent`
-- Validasi dilakukan untuk memastikan input tidak kosong (setelah di-trim)
-- Jika valid, tugas ditambahkan ke array `tasks` menggunakan `push()`
-- Input field di-reset menjadi string kosong untuk input tugas berikutnya
-- `.prevent` mencegah reload halaman saat form di-submit
 
-#### 📊 **Bagaimana Data Ditampilkan Menggunakan `v-for`**
-```vue
-<li v-for="(task, index) in tasks" :key="index" class="task-item">
-  <span class="task-number">{{ index + 1 }}.</span>
-  <span class="task-text">{{ task }}</span>
-  <button @click="deleteTask(index)" class="btn-delete">
-    🗑️ Hapus
-  </button>
-</li>
-```
-- `v-for` melakukan iterasi pada array `tasks`
-- Setiap item mendapat parameter `task` (isi tugas) dan `index` (urutan)
-- `:key="index"` memberikan identifier unik untuk setiap elemen (Vue tracking)
-- `{{ index + 1 }}` menampilkan nomor urut dimulai dari 1
-- `{{ task }}` menampilkan teks tugas menggunakan interpolation
+**Fungsi `addTodo()`:**
 
-#### 🗑️ **Cara Kerja Tombol Hapus**
-```javascript
-const deleteTask = (index: number) => {
-  tasks.value.splice(index, 1)
+```typescript
+function addTodo(title: string, detail: string, deadline: string) {
+	const newTodo: Todo = {
+		id: Date.now(),
+		title,
+		detail,
+		deadline,
+		createdAt: new Date().toISOString(),
+		completed: false,
+	};
+	todos.value.push(newTodo);
 }
 ```
-- Fungsi `deleteTask()` menerima parameter `index` dari item yang akan dihapus
-- Event handler `@click="deleteTask(index)"` memanggil fungsi dengan index spesifik
-- Method `splice(index, 1)` menghapus 1 elemen pada posisi `index` dari array
-- Vue secara otomatis me-render ulang UI karena data reaktif
 
-#### 🔄 **Kondisi Kosong dengan `v-if`**
+- Menerima input dari form (title, detail, deadline)
+- Generate ID unik menggunakan `Date.now()`
+- Generate tanggal dibuat otomatis dengan `new Date().toISOString()`
+- Menambahkan todo baru ke dalam array `todos`
+- Vue secara otomatis akan me-render ulang UI karena reaktifitas Pinia
+
+**Fungsi `completeTodo()`:**
+
+```typescript
+function completeTodo(id: number) {
+	const todo = todos.value.find((t) => t.id === id);
+	if (todo) {
+		todo.completed = true;
+		todo.completedAt = new Date().toISOString();
+	}
+}
+```
+
+- Mencari todo berdasarkan ID
+- Mengubah status `completed` menjadi `true`
+- Mencatat waktu penyelesaian di `completedAt`
+- Digunakan untuk evaluasi deadline (tepat waktu vs terlambat)
+
+**Computed Properties:**
+
+```typescript
+const getActiveTodos = computed(() =>
+	todos.value.filter((todo) => !todo.completed)
+);
+
+const getCompletedTodos = computed(() =>
+	todos.value.filter((todo) => todo.completed)
+);
+```
+
+- Memfilter tugas aktif dan selesai secara otomatis
+- Computed property akan update otomatis saat data berubah
+
+---
+
+#### B. Komponen Navbar (`TodoNavbar.vue`)
+
 ```vue
-<div v-if="tasks.length === 0" class="empty-state">
-  <p>📭 Tidak ada tugas</p>
+<template>
+	<div class="flex gap-2">
+		<button
+			@click="changeTab('active')"
+			:class="activeTab === 'active' ? 'bg-emerald-500' : 'bg-gray-100'"
+		>
+			List Tugas
+		</button>
+		<button
+			@click="changeTab('completed')"
+			:class="activeTab === 'completed' ? 'bg-emerald-500' : 'bg-gray-100'"
+		>
+			Tugas Selesai
+		</button>
+	</div>
+</template>
+```
+
+- Menggunakan `emit` untuk komunikasi dengan parent component
+- Conditional class binding untuk active state
+- Tailwind CSS untuk styling responsif
+
+---
+
+#### C. Menampilkan Data dengan `v-for` (`TodoList.vue`)
+
+```vue
+<div v-for="todo in activeTodos" :key="todo.id"
+     class="bg-white border-l-4 border-emerald-500">
+  <h3 class="font-bold">{{ todo.title }}</h3>
+  <p class="text-gray-600">{{ todo.detail || 'Tidak ada detail' }}</p>
+
+  <div class="text-sm text-gray-500">
+    <div>📅 Dibuat: {{ formatDate(todo.createdAt) }}</div>
+    <div>⏰ Deadline: {{ formatDate(todo.deadline) }}</div>
+  </div>
+
+  <div class="flex gap-2">
+    <button @click="handleComplete(todo.id)">✓ Done</button>
+    <button @click="handleDelete(todo.id)">✕ Hapus</button>
+  </div>
 </div>
-<ul v-else class="task-list">
-  <!-- Daftar tugas -->
-</ul>
-```
-- `v-if` menampilkan elemen hanya jika kondisi bernilai `true`
-- Jika `tasks.length === 0`, tampilkan pesan "Tidak ada tugas"
-- `v-else` menampilkan daftar tugas jika array tidak kosong
-- Ini membuat UI responsif terhadap perubahan data
-
----
-
-## 🛠️ Teknologi yang Digunakan
-
-- **Vue.js 3** - Progressive JavaScript Framework
-- **Composition API** - State management dengan `ref()`
-- **TypeScript** - Type safety dan better development experience
-- **Vite** - Fast build tool dan development server
-- **CSS3** - Styling dengan gradient, animasi, dan responsive design
-
----
-
-## 📦 Struktur Project
-
-```
-todoVue_F1D022104/
-├── public/              # Static assets
-├── src/
-│   ├── App.vue         # Main component (To-Do List)
-│   ├── main.ts         # Entry point
-│   └── assets/         # Images, styles
-├── screenshots/        # Screenshot hasil program
-├── package.json        # Dependencies
-├── vite.config.ts      # Vite configuration
-└── README.md          # Dokumentasi (file ini)
 ```
 
----
-
-## 🎨 Fitur Tambahan (Improvisasi)
-
-Selain memenuhi requirement dasar, aplikasi ini juga memiliki:
-
-1. **Identitas Mahasiswa** - Ditampilkan di dalam card aplikasi
-2. **Gradient Background** - Background purple gradient yang modern
-3. **Animasi Smooth** - Transisi dan hover effects pada setiap elemen
-4. **Slide-in Animation** - Animasi ketika tugas baru ditambahkan
-5. **Statistik Tugas** - Menampilkan total jumlah tugas
-6. **Responsive Design** - Tampilan optimal di desktop dan mobile
-7. **Emoji Icons** - Visual yang lebih menarik dan user-friendly
-8. **Shadow Effects** - Depth dan dimensi pada card dan button
-9. **Number Indicator** - Penomoran otomatis pada setiap tugas
-10. **Validation** - Mencegah penambahan tugas kosong
+- `v-for` untuk looping setiap todo dalam array
+- `:key="todo.id"` untuk tracking perubahan (best practice Vue)
+- Menampilkan title, detail, tanggal dengan interpolation `{{ }}`
+- Event handler `@click` untuk tombol Done dan Hapus
 
 ---
 
-## 📸 Petunjuk Screenshot
+#### D. Cara Kerja Tombol Hapus
 
-Untuk melengkapi dokumentasi, silakan tambahkan screenshot berikut ke folder `screenshots/`:
+```vue
+<script setup lang="ts">
+const handleDelete = (id: number) => {
+	if (confirm("Yakin ingin menghapus tugas ini?")) {
+		todoStore.deleteTodo(id);
+	}
+};
+</script>
+```
 
-1. **tampilan-kosong.png** - Tampilan awal aplikasi tanpa tugas
-2. **form-input.png** - Screenshot saat mengisi form input
-3. **daftar-tugas.png** - Screenshot dengan beberapa tugas
-4. **hover-effect.png** - Screenshot efek hover pada tombol/item
+- Menampilkan konfirmasi sebelum menghapus dengan `confirm()`
+- Memanggil fungsi `deleteTodo()` dari Pinia store
+- Todo akan dihapus dari array dan UI update otomatis
 
----
+**Di Pinia store:**
 
-## 📝 Kesimpulan
+```typescript
+function deleteTodo(id: number) {
+	const index = todos.value.findIndex((t) => t.id === id);
+	if (index !== -1) {
+		todos.value.splice(index, 1);
+	}
+}
+```
 
-Aplikasi To-Do List ini berhasil mengimplementasikan konsep dasar Vue.js:
-- ✅ Reaktivitas dengan `ref()`
-- ✅ Two-way binding dengan `v-model`
-- ✅ Event handling dengan `@submit` dan `@click`
-- ✅ Conditional rendering dengan `v-if` dan `v-else`
-- ✅ List rendering dengan `v-for` dan `:key`
-- ✅ Method/Function untuk logic aplikasi
-
-Aplikasi berjalan tanpa error dan memiliki tampilan yang rapi serta user-friendly.
-
----
-
-## 👨‍💻 Author
-
-**Abdul Wafa**  
-NIM: F1D022104  
-Universitas Lampung
-
----
-
-## 📄 License
-
-This project is created for educational purposes.
+- Mencari index todo berdasarkan ID
+- Menghapus dari array dengan `splice()`
+- Reaktifitas Vue akan update UI secara otomatis
 
 ---
 
-**© 2025 - Week 12 Vue.js Assignment**
+#### E. Evaluasi Deadline dengan Color Coding (`CompletedTodos.vue`)
+
+```vue
+<div v-for="todo in completedTodos" :key="todo.id"
+     :class="getStatusClass(todo)">
+  <!-- ... -->
+  <div :class="getStatusBadgeClass(todo)">
+    {{ getStatusText(todo) }}
+  </div>
+</div>
+
+<script setup lang="ts">
+const getStatusClass = (todo: Todo) => {
+  const deadline = new Date(todo.deadline);
+  const completed = new Date(todo.completedAt!);
+
+  return completed <= deadline
+    ? 'bg-green-50 border-green-500'  // Tepat waktu
+    : 'bg-red-50 border-red-500';     // Terlambat
+};
+
+const getStatusText = (todo: Todo) => {
+  const deadline = new Date(todo.deadline);
+  const completed = new Date(todo.completedAt!);
+
+  return completed <= deadline
+    ? '✓ Selesai Tepat Waktu'
+    : '⚠ Selesai Terlambat';
+};
+</script>
+```
+
+- Membandingkan tanggal selesai (`completedAt`) dengan deadline
+- Jika selesai ≤ deadline → hijau
+- Jika selesai > deadline → merah
+- Badge dinamis sesuai dengan status
+
+---
+
+## Struktur Folder
+
+```
+src/
+├── components/
+│   ├── TodoNavbar.vue      # Navbar dengan 2 tab
+│   ├── TodoList.vue        # Daftar tugas aktif
+│   ├── AddTodoForm.vue     # Form tambah tugas
+│   └── CompletedTodos.vue  # Daftar tugas selesai
+├── stores/
+│   └── todo.ts             # Pinia store (state management)
+├── assets/
+│   └── main.css            # Tailwind CSS import
+├── App.vue                 # Komponen root
+└── main.ts                 # Entry point aplikasi
+```
+
+---
+
+## Kesimpulan
+
+Aplikasi ini berhasil mengimplementasikan konsep Vue.js modern:
+
+✅ **Reactive State Management** - Pinia store dengan TypeScript interface  
+✅ **Component-based Architecture** - 4 komponen terpisah dengan concern yang jelas  
+✅ **Two-way Data Binding** - Form input dengan v-model  
+✅ **Conditional Rendering** - v-if untuk show/hide components  
+✅ **List Rendering** - v-for untuk looping data  
+✅ **Event Handling** - @click untuk interaksi user  
+✅ **Computed Properties** - Filtering tugas aktif/selesai  
+✅ **Props & Emits** - Komunikasi antar komponen  
+✅ **Conditional Styling** - Dynamic class binding untuk color coding  
+✅ **Date Manipulation** - Auto-generate dan format tanggal  
+✅ **Modern UI/UX** - Tailwind CSS dengan fullscreen gradient background
+
+---
+
+## Cara Menjalankan
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+Aplikasi akan berjalan di `http://localhost:5174/`
+
+---
+
+**© 2025 - Abdul Wafa (F1D022104)**  
+Pemrograman Web Lanjut B - Week 12
