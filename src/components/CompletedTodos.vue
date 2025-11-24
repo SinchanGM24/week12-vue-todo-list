@@ -32,7 +32,7 @@
           >
             <span>Dibuat: {{ formatDate(todo.createdAt) }}</span>
             <span>Deadline: {{ formatDate(todo.deadline) }}</span>
-            <span>Selesai: {{ formatDate(todo.completedAt!) }}</span>
+            <span>Selesai: {{ formatDate(todo.completedAt) }}</span>
           </div>
           <div
             :class="[
@@ -50,15 +50,15 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { computed } from "vue";
-import { useTodoStore, type Todo } from "@/stores/todo";
+import { useTodoStore } from "@/stores/todo";
 
 const todoStore = useTodoStore();
 
 const completedTodos = computed(() => todoStore.getCompletedTodos());
 
-function formatDate(dateString: string) {
+function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("id-ID", {
     day: "2-digit",
@@ -67,7 +67,7 @@ function formatDate(dateString: string) {
   });
 }
 
-function getStatusClass(todo: Todo) {
+function getStatusClass(todo) {
   if (!todo.completedAt) return "";
 
   const deadline = new Date(todo.deadline);
@@ -80,7 +80,7 @@ function getStatusClass(todo: Todo) {
   return completedDate <= deadline ? "on-time" : "late";
 }
 
-function getStatusText(todo: Todo) {
+function getStatusText(todo) {
   if (!todo.completedAt) return "";
 
   const deadline = new Date(todo.deadline);

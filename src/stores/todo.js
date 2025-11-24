@@ -1,22 +1,12 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 
-export interface Todo {
-  id: number;
-  title: string;
-  detail: string;
-  deadline: string;
-  createdAt: string;
-  completed: boolean;
-  completedAt?: string;
-}
-
 export const useTodoStore = defineStore("todo", () => {
-  const todos = ref<Todo[]>([]);
+  const todos = ref([]);
   const nextId = ref(1);
 
-  function addTodo(title: string, detail: string, deadline: string) {
-    const newTodo: Todo = {
+  function addTodo(title, detail, deadline) {
+    const newTodo = {
       id: nextId.value++,
       title,
       detail,
@@ -27,14 +17,14 @@ export const useTodoStore = defineStore("todo", () => {
     todos.value.push(newTodo);
   }
 
-  function deleteTodo(id: number) {
+  function deleteTodo(id) {
     const index = todos.value.findIndex((todo) => todo.id === id);
     if (index !== -1) {
       todos.value.splice(index, 1);
     }
   }
 
-  function completeTodo(id: number) {
+  function completeTodo(id) {
     const todo = todos.value.find((todo) => todo.id === id);
     if (todo) {
       todo.completed = true;

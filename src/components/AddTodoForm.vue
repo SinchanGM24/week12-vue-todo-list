@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex-1 bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl border-2 border-indigo-100 shadow-lg"
+    class="flex-1 bg-linear-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl border-2 border-indigo-100 shadow-lg"
   >
     <h2 class="text-3xl font-semibold text-center text-gray-800 mb-8">Tambah Tugas Baru</h2>
     <form @submit.prevent="handleSubmit" class="space-y-6">
@@ -47,7 +47,7 @@
       <div class="flex gap-4 pt-4">
         <button
           type="submit"
-          class="flex-1 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-semibold hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 uppercase tracking-wide"
+          class="flex-1 px-6 py-3 bg-linear-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-semibold hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 uppercase tracking-wide"
         >
           Simpan
         </button>
@@ -63,16 +63,13 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { reactive } from "vue";
 import { useTodoStore } from "@/stores/todo";
 
 const todoStore = useTodoStore();
 
-const emit = defineEmits<{
-  (e: "success"): void;
-  (e: "cancel"): void;
-}>();
+const emit = defineEmits(["success", "cancel"]);
 
 const form = reactive({
   title: "",

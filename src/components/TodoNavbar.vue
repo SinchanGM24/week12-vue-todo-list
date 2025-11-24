@@ -25,12 +25,13 @@
   </nav>
 </template>
 
-<script setup lang="ts">
-defineProps<{
-  currentView: "active" | "completed";
-}>();
+<script setup>
+defineProps({
+  currentView: {
+    type: String,
+    required: true,
+  },
+});
 
-defineEmits<{
-  (e: "change-view", view: "active" | "completed"): void;
-}>();
+defineEmits(["change-view"]);
 </script>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
 import TodoNavbar from "./components/TodoNavbar.vue";
 import TodoList from "./components/TodoList.vue";
@@ -6,11 +6,11 @@ import AddTodoForm from "./components/AddTodoForm.vue";
 import CompletedTodos from "./components/CompletedTodos.vue";
 
 // State untuk view dan form
-const currentView = ref<"active" | "completed">("active");
+const currentView = ref("active");
 const showAddForm = ref(false);
 
 // Handler functions
-const handleChangeView = (view: "active" | "completed") => {
+const handleChangeView = (view) => {
   currentView.value = view;
   showAddForm.value = false;
 };
@@ -30,7 +30,7 @@ const handleFormCancel = () => {
 
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-purple-800 flex items-center justify-center p-4 sm:p-6 lg:p-8"
+    class="min-h-screen bg-linear-to-br from-indigo-600 via-purple-600 to-purple-800 flex items-center justify-center p-4 sm:p-6 lg:p-8"
   >
     <div class="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-6 sm:p-8 lg:p-10 min-h-[85vh]">
       <h1
@@ -38,7 +38,7 @@ const handleFormCancel = () => {
       >
         <span>📝</span>
         <span
-          class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent md:h-[45px]"
+          class="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent md:h-[45px]"
           >Aplikasi Manajemen Tugas</span
         >
       </h1>

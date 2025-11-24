@@ -54,19 +54,17 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { computed } from "vue";
 import { useTodoStore } from "@/stores/todo";
 
 const todoStore = useTodoStore();
 
-defineEmits<{
-  (e: "add-todo"): void;
-}>();
+defineEmits(["add-todo"]);
 
 const activeTodos = computed(() => todoStore.getActiveTodos());
 
-function formatDate(dateString: string) {
+function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("id-ID", {
     day: "2-digit",
@@ -75,11 +73,11 @@ function formatDate(dateString: string) {
   });
 }
 
-function handleComplete(id: number) {
+function handleComplete(id) {
   todoStore.completeTodo(id);
 }
 
-function handleDelete(id: number) {
+function handleDelete(id) {
   if (confirm("Apakah Anda yakin ingin menghapus tugas ini?")) {
     todoStore.deleteTodo(id);
   }
